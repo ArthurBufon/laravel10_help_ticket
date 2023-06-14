@@ -6,22 +6,31 @@
 
         <img width="50" height="50" class="rounded-full" src="{{ "storage/$user->avatar" }}" alt="user avatar">
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            Add or update your avatar!
-        </p>
-    </header>
+        <form action="{{ route('profile.avatar.ai') }}" method="POST">
+            @csrf
+            <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                Generate avatar from AI
+            </p>
+            <x-primary-button>Generate avatar</x-primary-button>
+        </form>
 
-    <form method="post" action="{{ route('profile.avatar') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
-        @csrf
-        @method('patch')
+        <p class="my-4 text-sm text-gray-600 dark:text-gray-400">
+            Or
+        </p>
 
         @if (session('message'))
-            <div class="text-green">
+            <div class="text-red-500">
                 {{ session('message') }}
             </div>
         @endif
+    </header>
+
+    <form method="post" action="{{ route('profile.avatar') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
+        @method('patch')
+        @csrf
+        
         <div>
-            <x-input-label for="avatar" value="Avatar" />
+            <x-input-label for="avatar" value="Upload Avatar From Computer" />
             <x-text-input id="avatar" name="avatar" type="file" class="mt-1 block w-full" :value="old('avatar', $user->avatar)" required autofocus autocomplete="avatar" />
             <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
         </div>
