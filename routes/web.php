@@ -35,10 +35,11 @@ require __DIR__ . '/auth.php';
 
 Route::get('/openai', function () {
 
-    $result = OpenAI::completions()->create([
-        'model' => 'text-davinci-003',
-        'prompt' => 'PHP is',
+    $result = OpenAI::images()->create([
+        'prompt' => 'Create avatar for user with name' . auth()->user()->name,
+        'n' => 1,
+        'size' => "256x256",
     ]);
 
-    echo $result['choices'][0]['text']; // an open-source, widely-used, server-side scripting language.
+    return response(['url' => $result->data[0]->url]);
 });
