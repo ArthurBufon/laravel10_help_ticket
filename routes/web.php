@@ -3,7 +3,10 @@
 use App\Http\Controllers\OpenAIController;
 use App\Http\Controllers\Profile\AvatarController;
 use App\Http\Controllers\ProfileController;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 use OpenAI\Laravel\Facades\OpenAI;
 
 /*
@@ -29,19 +32,29 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
+
     Route::patch('/profile/avatar', [AvatarController::class, 'update'])->name('profile.avatar');
     Route::post('/profile/avatar/ai', [AvatarController::class, 'generate'])->name('profile.avatar.ai');
 });
 
 require __DIR__ . '/auth.php';
 
-Route::get('/openai', function () {
+Route::post('/auth/redirect', function () {
+    return Socialite::driver('github')->redirect();
+})->name('login.github');
 
-    $result = OpenAI::completions()->create([
-        'model' => 'gpt-3.5-turbo',
-        'messages' => 'ew'
-    ]);
+Route::get('/auth/callback', function () {
+    $user = Socialite::driver('github')->user();
+    $user = User::firstOrCreate(
+        ['email' => $user->email],
+        [
+            'name' => $user->name,
+            'password' => 'admin123',
+        ]
+    );
 
-    echo $result['choices'][0]['message']['content'];
+    Auth::login($user);
+    return redirect('/dashboard');
+    // dd($user);
+    // $user->token
 });
