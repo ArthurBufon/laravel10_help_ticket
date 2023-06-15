@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
     });
 
     //TICKET
-    Route::prefix('ticket')->group(function () {
+    Route::prefix('ticket')->name('ticket.')->group(function () {
         Route::resource('/', TicketController::class);
     });
 });
