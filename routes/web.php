@@ -67,7 +67,3 @@ Route::get('/auth/callback', function () {
     Auth::login($user);
     return redirect('/dashboard');
 });
-
-Route::middleware('auth')->group(function () {
-    Route::resource('/ticket', TicketController::class);
-});
