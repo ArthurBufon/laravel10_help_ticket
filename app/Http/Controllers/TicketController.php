@@ -61,6 +61,7 @@ class TicketController extends Controller
         return view('ticket.show', compact('ticket'));
     }
 
+
     /**
      * Show the form for editing the specified resource.
      */

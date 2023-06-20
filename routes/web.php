@@ -42,9 +42,7 @@ Route::middleware('auth')->group(function () {
     });
 
     //TICKET
-    Route::prefix('ticket')->name('ticket.')->group(function () {
-        Route::resource('/', TicketController::class);
-    });
+    Route::resource('/ticket', TicketController::class);
 });
 
 require __DIR__ . '/auth.php';
